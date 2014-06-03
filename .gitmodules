@@ -1,0 +1,3 @@
+[submodule "git_piano"]
+	path = git_piano
+	url = git://github.com/rsahai91/javascript_piano
