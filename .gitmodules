@@ -1,6 +1,6 @@
 [submodule "git_piano"]
 	path = git_piano
-	url = git://github.com/rsahai91/piano_js.git
+	url = https://github.com/rsahai91/piano_js.git
 [submodule "asteroids"]
 	path = asteroids
-	url = git://github.com/rsahai91/asteroids_js.git
+	url = https://github.com/rsahai91/asteroids_js.git
