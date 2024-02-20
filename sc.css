@@ -19,4 +19,5 @@ h1 {
   -webkit-transform: translate(0, -50%);
           transform: translate(0, -50%);
   font-size: 100px;
+  padding: 30px;
 }
