@@ -68,6 +68,21 @@
         .drum-control.visible {
             opacity: 1;
         }
+        
+        .mobile-sound-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgb(227, 222, 222);
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.4em;
+            opacity: 0;
+            animation: fadeIn 3s forwards;
+            animation-delay: 2s;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +91,7 @@
         Your browser does not support the video tag.
     </video>
     <p class="fade-in-text" id="text">click.</p>
+    <p class="mobile-sound-hint" id="mobile-sound-hint">turn on sound</p>
     <button class="drum-control" id="drum-control" style="display: none;">
         <img src="music.png" alt="Music Control" width="24" height="24">
     </button>
@@ -86,6 +102,7 @@
         const canvas = document.getElementById('video-canvas');
         const context = canvas.getContext('2d');
         const drumControl = document.getElementById('drum-control');
+        const mobileSoundHint = document.getElementById('mobile-sound-hint');
 
         // Audio context for generating tones
         let audioContext;
@@ -119,8 +136,10 @@
             
             if (isMobile) {
                 text.textContent = 'tap.';
+                mobileSoundHint.style.display = 'block';
             } else {
                 text.textContent = 'click.';
+                mobileSoundHint.style.display = 'none';
             }
         }
         
@@ -152,6 +171,7 @@
         
         // Play drum beat
         function playDrumBeat() {
+            console.log('playDrumBeat called - audioContext:', !!audioContext, 'isDrumPlaying:', isDrumPlaying);
             if (!audioContext || isDrumPlaying) return;
             
             isDrumPlaying = true;
@@ -355,8 +375,11 @@
         
         // Move to next chord and start repeating it
         function advanceToNextChord() {
+            console.log('advanceToNextChord called - currentChordIndex:', currentChordIndex);
+            
             // Move to next chord
             currentChordIndex = (currentChordIndex + 1) % 7;
+            console.log('New chord index:', currentChordIndex);
             
             // Schedule the chord change for the next beat
             if (isDrumPlaying) {
@@ -370,11 +393,13 @@
                 
                 // Schedule the chord change
                 setTimeout(() => {
+                    console.log('Executing scheduled chord change');
                     stopChordRepetition();
                     startChordRepetition();
                 }, timeToNextBeat * 1000);
             } else {
                 // If drums aren't playing, change immediately but gracefully
+                console.log('Drums not playing - changing chord immediately');
                 stopChordRepetition();
                 setTimeout(() => {
                     startChordRepetition();
@@ -409,6 +434,12 @@
 
         // Handle clicks and touches to initialize audio and play chords
         function handleInteraction(e) {
+            console.log('=== INTERACTION DEBUG ===');
+            console.log('Event type:', e.type);
+            console.log('Drums ever started:', drumsEverStarted);
+            console.log('Is drum playing:', isDrumPlaying);
+            console.log('Is chord playing:', isChordPlaying);
+            
             initAudio();
             
             // Get coordinates (works for both mouse and touch)
@@ -425,19 +456,32 @@
                 
                 // First interaction starts the drum beat
                 if (!drumsEverStarted) {
-                    console.log('Starting drums from video interaction');
+                    console.log('ACTION: Starting drums from video interaction');
                     playDrumBeat();
+                    // Prevent immediate chord advancement on first tap
+                    return;
                 } else {
                     // Subsequent interactions advance to next chord
-                    console.log('Advancing to next chord from video interaction');
+                    console.log('ACTION: Advancing to next chord from video interaction');
                     advanceToNextChord();
                 }
+            } else {
+                console.log('Interaction outside video area');
             }
+            console.log('=== END INTERACTION DEBUG ===');
         }
         
-        // Add both click and touch event listeners
-        document.addEventListener('click', handleInteraction);
-        document.addEventListener('touchstart', handleInteraction);
+        // Detect if we're on a touch device
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Add appropriate event listeners based on device type
+        if (isTouchDevice) {
+            // On touch devices, only listen for touch events
+            document.addEventListener('touchstart', handleInteraction);
+        } else {
+            // On desktop, listen for click events
+            document.addEventListener('click', handleInteraction);
+        }
         
         // Handle drum control button clicks
         drumControl.addEventListener('click', function(e) {
