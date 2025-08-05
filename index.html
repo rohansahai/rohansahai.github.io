@@ -71,7 +71,7 @@
     </style>
 </head>
 <body>
-    <video id="background-video" autoplay muted loop>
+    <video id="background-video" autoplay muted loop playsinline>
         <source src="leaves.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
@@ -109,9 +109,21 @@
         let currentChordIndex = 0; // 0-6 for the seven chords
         let chordInterval;
         let isChordPlaying = false;
-        let waitingForKick = false;
-        let pendingChordStart = false;
+        let currentOscillators = []; // Track currently playing oscillators
+        let currentGainNodes = []; // Track currently playing gain nodes
 
+        // Detect mobile device and update text
+        function updateTextForDevice() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                            (window.innerWidth <= 768 && window.innerHeight <= 1024);
+            
+            if (isMobile) {
+                text.textContent = 'tap.';
+            } else {
+                text.textContent = 'click.';
+            }
+        }
+        
         // Initialize audio context on first user interaction
         function initAudio() {
             if (!audioContext) {
@@ -159,25 +171,11 @@
                 // Kick drum on beats 1 and 3
                 if (beatCount % 4 === 0 || beatCount % 4 === 2) {
                     createDrumSound(60, 0.1, 'sine'); // Low kick
-                    
-                    // Check if we're waiting for a kick to start chords
-                    if (waitingForKick && pendingChordStart) {
-                        waitingForKick = false;
-                        pendingChordStart = false;
-                        startChordRepetition();
-                    }
                 }
                 
                 // Snare on beats 2 and 4
                 if (beatCount % 4 === 1 || beatCount % 4 === 3) {
                     createDrumSound(200, 0.05, 'square'); // Snare-like
-                    
-                    // Check if we're waiting for a snare to start chords
-                    if (waitingForKick && pendingChordStart) {
-                        waitingForKick = false;
-                        pendingChordStart = false;
-                        startChordRepetition();
-                    }
                 }
                 
                 // Hi-hat on every beat
@@ -260,6 +258,8 @@
             
             console.log('Playing chord:', chordName);
             
+            // Don't stop current chord - let it finish naturally
+            
             // Create oscillators for each note in the chord
             const oscillators = [];
             const gainNodes = [];
@@ -288,6 +288,10 @@
                 oscillators.push(osc);
                 gainNodes.push(gain);
             });
+            
+            // Store the current oscillators and gain nodes for potential stopping
+            currentOscillators = oscillators;
+            currentGainNodes = gainNodes;
         }
         
         // Start chord repetition in rhythm
@@ -306,6 +310,31 @@
             }, 275); // Half a beat = 275ms (550ms / 2)
         }
         
+        // Stop the currently playing chord immediately
+        function stopCurrentChord() {
+            // Stop all currently playing oscillators
+            currentOscillators.forEach(osc => {
+                try {
+                    osc.stop();
+                } catch (e) {
+                    // Oscillator might already be stopped
+                }
+            });
+            
+            // Reset gain nodes
+            currentGainNodes.forEach(gain => {
+                try {
+                    gain.gain.setValueAtTime(0, audioContext.currentTime);
+                } catch (e) {
+                    // Gain node might be disconnected
+                }
+            });
+            
+            // Clear the arrays
+            currentOscillators = [];
+            currentGainNodes = [];
+        }
+        
         // Stop chord repetition
         function stopChordRepetition() {
             if (chordInterval) {
@@ -313,6 +342,8 @@
                 isChordPlaying = false;
                 console.log('Stopping chord repetition');
             }
+            // Also stop any currently playing chord
+            stopCurrentChord();
         }
         
         // Play the current chord
@@ -324,20 +355,30 @@
         
         // Move to next chord and start repeating it
         function advanceToNextChord() {
-            // Stop current repetition
-            stopChordRepetition();
-            
             // Move to next chord
             currentChordIndex = (currentChordIndex + 1) % 7;
             
-            // Wait for next kick drum to start
+            // Schedule the chord change for the next beat
             if (isDrumPlaying) {
-                waitingForKick = true;
-                pendingChordStart = true;
-                console.log('Waiting for next kick drum to start chord');
+                // Calculate time until next beat
+                const now = audioContext.currentTime;
+                const beatDuration = 0.55; // 550ms per beat
+                const timeSinceLastBeat = (now * 1000) % (beatDuration * 1000);
+                const timeToNextBeat = (beatDuration * 1000 - timeSinceLastBeat) / 1000;
+                
+                console.log('Scheduling chord change in', timeToNextBeat, 'seconds');
+                
+                // Schedule the chord change
+                setTimeout(() => {
+                    stopChordRepetition();
+                    startChordRepetition();
+                }, timeToNextBeat * 1000);
             } else {
-                // If drums aren't playing, start immediately
-                startChordRepetition();
+                // If drums aren't playing, change immediately but gracefully
+                stopChordRepetition();
+                setTimeout(() => {
+                    startChordRepetition();
+                }, 50); // Small delay to avoid harsh cutoff
             }
         }
 
@@ -440,6 +481,30 @@
         });
 
         video.playbackRate = 0.5; // Adjust the rate as needed
+        
+        // Mobile autoplay handling
+        function ensureVideoPlays() {
+            if (video.paused) {
+                video.play().catch(function(error) {
+                    console.log('Video autoplay failed:', error);
+                    // Try again on user interaction
+                    document.addEventListener('click', function playVideo() {
+                        video.play().catch(console.error);
+                        document.removeEventListener('click', playVideo);
+                    }, { once: true });
+                });
+            }
+        }
+        
+        // Try to play video immediately
+        ensureVideoPlays();
+        
+        // Also try when video is loaded
+        video.addEventListener('loadeddata', ensureVideoPlays);
+        video.addEventListener('canplay', ensureVideoPlays);
+        
+        // Update text for device type
+        updateTextForDevice();
         
         // Add error handling for video
         video.addEventListener('error', function(e) {
