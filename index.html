@@ -1,568 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Background</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: rgb(227, 222, 222);
-            font-size: 3em;
-            text-align: center;
-            font-family: 'Roboto', sans-serif;
-        }
-        video {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-        }
-        .fade-in-text {
-            opacity: 0;
-            animation: fadeIn 3s forwards;
-            text-decoration: none;
-            color: inherit;
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-        
-        .drum-control {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            padding: 12px;
-            cursor: pointer;
-            opacity: 0;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .drum-control:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .drum-control.visible {
-            opacity: 1;
-        }
-        
-        .mobile-sound-hint {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgb(227, 222, 222);
-            font-family: 'Roboto', sans-serif;
-            font-size: 0.4em;
-            opacity: 0;
-            animation: fadeIn 3s forwards;
-            animation-delay: 2s;
-            text-align: center;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rohan Sahai</title>
+  <meta
+    name="description"
+    content="Rohan Sahai lives in San Francisco and works on AI, music, homes, cities, and the rhythms of daily life."
+  >
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --bg: #f7f5f2;
+      --card: rgba(255, 255, 255, 0.78);
+      --card-border: rgba(28, 25, 23, 0.10);
+      --text: #262220;
+      --muted: #6f6862;
+      --label: #8a817b;
+      --bubble: #221e1c;
+      --shadow: 0 10px 30px rgba(15, 10, 6, 0.06);
+      --radius-xl: 28px;
+      --radius-pill: 999px;
+      --content-width: 740px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .inline-link {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.14em;
+    }
+
+    .page {
+      width: min(calc(100% - 2rem), 920px);
+      margin: 0 auto;
+      padding: 78px 0 96px;
+    }
+
+    .prompt-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 42px;
+    }
+
+    .prompt-bubble {
+      max-width: 268px;
+      padding: 18px 22px;
+      border-radius: var(--radius-pill);
+      background: var(--bubble);
+      color: #faf8f6;
+      font-size: 14px;
+      line-height: 1.45;
+      box-shadow: 0 10px 25px rgba(34, 30, 28, 0.12);
+    }
+
+    .card {
+      width: min(100%, var(--content-width));
+      margin: 0 auto;
+      padding: 34px 32px 28px;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .intro {
+      margin: 0 0 34px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .portrait {
+      display: flex;
+      justify-content: center;
+      margin: 0 0 34px;
+    }
+
+    .portrait img {
+      display: block;
+      width: 100%;
+      max-width: 215px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 22px rgba(22, 17, 12, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(34px, 4.5vw, 50px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .lede {
+      margin: 0 0 42px;
+      max-width: 33rem;
+      font-size: clamp(18px, 2.4vw, 20px);
+      line-height: 1.8;
+      color: #514a45;
+    }
+
+    section + section {
+      margin-top: 36px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--label);
+    }
+
+    p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.9;
+      color: #534c46;
+    }
+
+    ul {
+      list-style: none;
+      margin: 14px 0 0;
+      padding: 0;
+    }
+
+    li {
+      font-size: 17px;
+      line-height: 1.9;
+      color: #534c46;
+    }
+
+    li + li {
+      margin-top: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(calc(100% - 1rem), 920px);
+        padding: 36px 0 56px;
+      }
+
+      .prompt-row {
+        margin-bottom: 24px;
+      }
+
+      .prompt-bubble {
+        max-width: 100%;
+        padding: 16px 18px;
+      }
+
+      .card {
+        padding: 24px 20px 22px;
+      }
+
+      .intro {
+        margin-bottom: 28px;
+      }
+
+      .lede {
+        margin-bottom: 34px;
+      }
+
+      p,
+      li {
+        font-size: 16px;
+        line-height: 1.8;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
 </head>
 <body>
-    <video id="background-video" autoplay muted loop playsinline>
-        <source src="leaves.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <p class="fade-in-text" id="text">click.</p>
-    <p class="mobile-sound-hint" id="mobile-sound-hint">turn on sound</p>
-    <button class="drum-control" id="drum-control" style="display: none;">
-        <img src="music.png" alt="Music Control" width="24" height="24">
-    </button>
-    <canvas id="video-canvas" style="display:none;"></canvas>
-    <script>
-        const video = document.getElementById('background-video');
-        const text = document.getElementById('text');
-        const canvas = document.getElementById('video-canvas');
-        const context = canvas.getContext('2d');
-        const drumControl = document.getElementById('drum-control');
-        const mobileSoundHint = document.getElementById('mobile-sound-hint');
+  <main class="page">
+    <div class="prompt-row">
+      <div class="prompt-bubble">Chat, make me a personal website.</div>
+    </div>
 
-        // Audio context for generating tones
-        let audioContext;
-        let oscillator;
-        let isPlaying = false;
-        let drumInterval;
-        let isDrumPlaying = false;
-        let drumsEverStarted = false;
-        
-        // Chord definitions (frequencies in Hz) - "A Day in the Life" progression
-        const Gmaj  = [392, 494, 587, 784];   // G4, B4, D5, G5
-        const Bmin  = [247, 294, 370, 494];   // B3, D4, F#4, B4
-        const Em    = [330, 392, 494, 659];   // E4, G4, B4, E5
-        const Em7   = [330, 392, 494, 587];   // E4, G4, B4, D5
-        const Cmaj  = [262, 330, 392, 523];   // C4, E4, G4, C5
-        const C_over_B = [247, 262, 330, 392]; // B3, C4, E4, G4  (written C/B)
-        const Asus2 = [220, 247, 330, 440];   // A3, B3, E4, A4
-        const Fmaj  = [349, 440, 523, 698];   // F4, A4, C5, F5
-        const Cmaj7 = [262, 330, 392, 494];   // C4, E4, G4, B4
-        
-        let currentChordIndex = 0; // 0-6 for the seven chords
-        let chordInterval;
-        let isChordPlaying = false;
-        let currentOscillators = []; // Track currently playing oscillators
-        let currentGainNodes = []; // Track currently playing gain nodes
+    <article class="card">
+      <p class="intro">Here&rsquo;s a first pass based on what I know about you:</p>
+      <div class="portrait">
+        <img src="randz.png" alt="Painterly image of an adult and child walking together outdoors">
+      </div>
 
-        // Detect mobile device and update text
-        function updateTextForDevice() {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                            (window.innerWidth <= 768 && window.innerHeight <= 1024);
-            
-            if (isMobile) {
-                text.textContent = 'tap.';
-                mobileSoundHint.style.display = 'block';
-            } else {
-                text.textContent = 'click.';
-                mobileSoundHint.style.display = 'none';
-            }
-        }
-        
-        // Initialize audio context on first user interaction
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                console.log('Audio context initialized:', audioContext.state);
-            }
-        }
-        
-        // Create drum sounds
-        function createDrumSound(frequency, duration, type = 'sine') {
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            
-            osc.frequency.setValueAtTime(frequency, audioContext.currentTime);
-            osc.type = type;
-            
-            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-            
-            osc.start(audioContext.currentTime);
-            osc.stop(audioContext.currentTime + duration);
-        }
-        
-        // Play drum beat
-        function playDrumBeat() {
-            console.log('playDrumBeat called - audioContext:', !!audioContext, 'isDrumPlaying:', isDrumPlaying);
-            if (!audioContext || isDrumPlaying) return;
-            
-            isDrumPlaying = true;
-            drumsEverStarted = true;
-            console.log('Starting drum beat');
-            
-            // Show drum control button
-            drumControl.style.display = 'block';
-            setTimeout(() => {
-                drumControl.classList.add('visible');
-            }, 10);
-            
-            let beatCount = 0;
-            drumInterval = setInterval(() => {
-                const currentTime = audioContext.currentTime;
-                
-                // Kick drum on beats 1 and 3
-                if (beatCount % 4 === 0 || beatCount % 4 === 2) {
-                    createDrumSound(60, 0.1, 'sine'); // Low kick
-                }
-                
-                // Snare on beats 2 and 4
-                if (beatCount % 4 === 1 || beatCount % 4 === 3) {
-                    createDrumSound(200, 0.05, 'square'); // Snare-like
-                }
-                
-                // Hi-hat on every beat
-                createDrumSound(800, 0.02, 'triangle'); // Hi-hat
-                
-                beatCount++;
-            }, 550); // 120 BPM (500ms per beat)
-        }
-        
-        // Stop drum beat
-        function stopDrumBeat() {
-            if (drumInterval) {
-                clearInterval(drumInterval);
-                isDrumPlaying = false;
-                console.log('Stopping drum beat');
-                
-                // Hide drum control button
-                drumControl.classList.remove('visible');
-                setTimeout(() => {
-                    drumControl.style.display = 'none';
-                }, 300);
-            }
-        }
+      <section>
+        <h1>Rohan Sahai</h1>
+        <p class="lede">
+          I live in San Francisco. I <a class="inline-link" href="https://chatgpt.com" target="_blank" rel="noreferrer">work on AI</a>,
+          <a class="inline-link" href="https://open.spotify.com/artist/5102NpxNold966hzJjlvFF" target="_blank" rel="noreferrer">make music</a>,
+          and spend a lot of time thinking about community, creativity, and happiness max&rsquo;ing.
+        </p>
+      </section>
 
-        // Generate a pleasant sine wave tone
-        function playTone(frequency = 440, duration = 0.3) {
-            if (!audioContext) {
-                console.log('No audio context available');
-                return;
-            }
-            
-            console.log('Playing note:', frequency, 'Hz for', duration, 'seconds');
-            
-            if (isPlaying) {
-                oscillator.stop();
-            }
+      <section>
+        <h2>Happy to chat about</h2>
+        <ul>
+          <li>the paint tube</li>
+          <li>the ny knicks</li>
+          <li>how to make chatgpt better</li>
+          <li>SF politics</li>
+          <li>brazilian music</li>
+        </ul>
+      </section>
+    </article>
 
-            oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-            oscillator.type = 'sine';
-            
-            // Create a gentle fade in/out
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.02);
-            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + duration);
-            
-            isPlaying = true;
-            
-            setTimeout(() => {
-                isPlaying = false;
-            }, duration * 1000);
-        }
-        
-        // Play a chord
-        function playChord(chord) {
-            if (!audioContext) {
-                console.log('No audio context available');
-                return;
-            }
-            
-            // Determine chord name for logging
-            let chordName = 'Unknown';
-            if (chord === Gmaj) chordName = 'Gmaj';
-            else if (chord === Bmin) chordName = 'Bmin';
-            else if (chord === Em) chordName = 'Em';
-            else if (chord === Em7) chordName = 'Em7';
-            else if (chord === Cmaj) chordName = 'Cmaj';
-            else if (chord === C_over_B) chordName = 'C/B';
-            else if (chord === Asus2) chordName = 'Asus2';
-            else if (chord === Fmaj) chordName = 'Fmaj';
-            else if (chord === Cmaj7) chordName = 'Cmaj7';
-            
-            console.log('Playing chord:', chordName);
-            
-            // Don't stop current chord - let it finish naturally
-            
-            // Create oscillators for each note in the chord
-            const oscillators = [];
-            const gainNodes = [];
-            
-            chord.forEach((frequency, index) => {
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                
-                osc.frequency.setValueAtTime(frequency, audioContext.currentTime);
-                osc.type = 'sine';
-                
-                // Stagger the start times slightly for a more natural sound
-                const startTime = audioContext.currentTime + (index * 0.02);
-                
-                // Create a staccato sound with quick attack and short duration
-                gain.gain.setValueAtTime(0, startTime);
-                gain.gain.linearRampToValueAtTime(0.08, startTime + 0.02);
-                gain.gain.linearRampToValueAtTime(0, startTime + 0.15);
-                
-                osc.start(startTime);
-                osc.stop(startTime + 0.15);
-                
-                oscillators.push(osc);
-                gainNodes.push(gain);
-            });
-            
-            // Store the current oscillators and gain nodes for potential stopping
-            currentOscillators = oscillators;
-            currentGainNodes = gainNodes;
-        }
-        
-        // Start chord repetition in rhythm
-        function startChordRepetition() {
-            if (isChordPlaying) return;
-            
-            isChordPlaying = true;
-            console.log('Starting chord repetition in rhythm');
-            
-            // Play the current chord immediately
-            playCurrentChord();
-            
-            // Set up interval to repeat the same chord twice per beat
-            chordInterval = setInterval(() => {
-                playCurrentChord();
-            }, 275); // Half a beat = 275ms (550ms / 2)
-        }
-        
-        // Stop the currently playing chord immediately
-        function stopCurrentChord() {
-            // Stop all currently playing oscillators
-            currentOscillators.forEach(osc => {
-                try {
-                    osc.stop();
-                } catch (e) {
-                    // Oscillator might already be stopped
-                }
-            });
-            
-            // Reset gain nodes
-            currentGainNodes.forEach(gain => {
-                try {
-                    gain.gain.setValueAtTime(0, audioContext.currentTime);
-                } catch (e) {
-                    // Gain node might be disconnected
-                }
-            });
-            
-            // Clear the arrays
-            currentOscillators = [];
-            currentGainNodes = [];
-        }
-        
-        // Stop chord repetition
-        function stopChordRepetition() {
-            if (chordInterval) {
-                clearInterval(chordInterval);
-                isChordPlaying = false;
-                console.log('Stopping chord repetition');
-            }
-            // Also stop any currently playing chord
-            stopCurrentChord();
-        }
-        
-        // Play the current chord
-        function playCurrentChord() {
-            const chords = [Gmaj, Bmin, Em, Em7, Cmaj, C_over_B, Asus2];
-            const chord = chords[currentChordIndex];
-            playChord(chord);
-        }
-        
-        // Move to next chord and start repeating it
-        function advanceToNextChord() {
-            console.log('advanceToNextChord called - currentChordIndex:', currentChordIndex);
-            
-            // Move to next chord
-            currentChordIndex = (currentChordIndex + 1) % 7;
-            console.log('New chord index:', currentChordIndex);
-            
-            // Schedule the chord change for the next beat
-            if (isDrumPlaying) {
-                // Calculate time until next beat
-                const now = audioContext.currentTime;
-                const beatDuration = 0.55; // 550ms per beat
-                const timeSinceLastBeat = (now * 1000) % (beatDuration * 1000);
-                const timeToNextBeat = (beatDuration * 1000 - timeSinceLastBeat) / 1000;
-                
-                console.log('Scheduling chord change in', timeToNextBeat, 'seconds');
-                
-                // Schedule the chord change
-                setTimeout(() => {
-                    console.log('Executing scheduled chord change');
-                    stopChordRepetition();
-                    startChordRepetition();
-                }, timeToNextBeat * 1000);
-            } else {
-                // If drums aren't playing, change immediately but gracefully
-                console.log('Drums not playing - changing chord immediately');
-                stopChordRepetition();
-                setTimeout(() => {
-                    startChordRepetition();
-                }, 50); // Small delay to avoid harsh cutoff
-            }
-        }
-
-        // Simplified interaction - use mouse position relative to video
-        function getMousePositionRelativeToVideo() {
-            const videoRect = video.getBoundingClientRect();
-            const relativeX = (mouseX - videoRect.left) / videoRect.width;
-            const relativeY = (mouseY - videoRect.top) / videoRect.height;
-            
-            // Only return position if mouse is over the video
-            if (relativeX >= 0 && relativeX <= 1 && relativeY >= 0 && relativeY <= 1) {
-                return { x: relativeX, y: relativeY };
-            }
-            return null;
-        }
-
-        // Mouse move handler
-        let mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-        
-        // Log mouse position occasionally
-        setInterval(() => {
-            console.log('Mouse position:', mouseX, mouseY);
-        }, 2000); // Log every 2 seconds
-
-        // Handle clicks and touches to initialize audio and play chords
-        function handleInteraction(e) {
-            console.log('=== INTERACTION DEBUG ===');
-            console.log('Event type:', e.type);
-            console.log('Drums ever started:', drumsEverStarted);
-            console.log('Is drum playing:', isDrumPlaying);
-            console.log('Is chord playing:', isChordPlaying);
-            
-            initAudio();
-            
-            // Get coordinates (works for both mouse and touch)
-            const rect = e.target.getBoundingClientRect();
-            const x = (e.clientX || e.touches[0].clientX);
-            const y = (e.clientY || e.touches[0].clientY);
-            
-            // Check if interaction is on the video
-            const videoRect = video.getBoundingClientRect();
-            
-            if (x >= videoRect.left && x <= videoRect.right &&
-                y >= videoRect.top && y <= videoRect.bottom) {
-                console.log('Interaction detected on video at:', x, y);
-                
-                // First interaction starts the drum beat
-                if (!drumsEverStarted) {
-                    console.log('ACTION: Starting drums from video interaction');
-                    playDrumBeat();
-                    // Prevent immediate chord advancement on first tap
-                    return;
-                } else {
-                    // Subsequent interactions advance to next chord
-                    console.log('ACTION: Advancing to next chord from video interaction');
-                    advanceToNextChord();
-                }
-            } else {
-                console.log('Interaction outside video area');
-            }
-            console.log('=== END INTERACTION DEBUG ===');
-        }
-        
-        // Detect if we're on a touch device
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
-        // Add appropriate event listeners based on device type
-        if (isTouchDevice) {
-            // On touch devices, only listen for touch events
-            document.addEventListener('touchstart', handleInteraction);
-        } else {
-            // On desktop, listen for click events
-            document.addEventListener('click', handleInteraction);
-        }
-        
-        // Handle drum control button clicks
-        drumControl.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Prevent triggering video click
-            if (isDrumPlaying) {
-                stopDrumBeat();
-            } else {
-                playDrumBeat();
-            }
-        });
-
-        video.addEventListener('play', function() {
-            console.log('Video started playing');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            console.log('Canvas size:', canvas.width, 'x', canvas.height);
-            
-            setInterval(() => {
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const frame = context.getImageData(0, 0, canvas.width, canvas.height);
-                const length = frame.data.length;
-                let r = 0, g = 0, b = 0, count = 0;
-
-                for (let i = 0; i < length; i += 4) {
-                    r += frame.data[i];
-                    g += frame.data[i + 1];
-                    b += frame.data[i + 2];
-                    count++;
-                }
-
-                r = Math.floor(r / count);
-                g = Math.floor(g / count);
-                b = Math.floor(b / count);
-
-                const inverseColor = `rgb(${255 - r}, ${255 - g}, ${255 - b})`;
-                text.style.color = inverseColor;
-                
-                // Removed mouse movement interaction - now only responds to clicks
-            }, 100); // Adjust the interval as needed
-        });
-
-        video.playbackRate = 0.5; // Adjust the rate as needed
-        
-        // Mobile autoplay handling
-        function ensureVideoPlays() {
-            if (video.paused) {
-                video.play().catch(function(error) {
-                    console.log('Video autoplay failed:', error);
-                    // Try again on user interaction
-                    document.addEventListener('click', function playVideo() {
-                        video.play().catch(console.error);
-                        document.removeEventListener('click', playVideo);
-                    }, { once: true });
-                });
-            }
-        }
-        
-        // Try to play video immediately
-        ensureVideoPlays();
-        
-        // Also try when video is loaded
-        video.addEventListener('loadeddata', ensureVideoPlays);
-        video.addEventListener('canplay', ensureVideoPlays);
-        
-        // Update text for device type
-        updateTextForDevice();
-        
-        // Add error handling for video
-        video.addEventListener('error', function(e) {
-            console.error('Video error:', e);
-        });
-        
-        video.addEventListener('loadstart', function() {
-            console.log('Video loading started');
-        });
-        
-        video.addEventListener('canplay', function() {
-            console.log('Video can play');
-        });
-    </script>
-    <script data-goatcounter="https://rohansahai.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  </main>
+  <script data-goatcounter="https://rohansahai.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
