@@ -170,34 +170,73 @@
     @media (max-width: 640px) {
       .page {
         width: min(calc(100% - 1rem), 920px);
-        padding: 36px 0 56px;
+        padding: 24px 0 40px;
       }
 
       .prompt-row {
-        margin-bottom: 24px;
+        justify-content: center;
+        margin-bottom: 18px;
       }
 
       .prompt-bubble {
-        max-width: 100%;
-        padding: 16px 18px;
+        max-width: min(100%, 320px);
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.5;
       }
 
       .card {
-        padding: 24px 20px 22px;
+        padding: 28px 22px 28px;
+        border-radius: 24px;
       }
 
       .intro {
-        margin-bottom: 28px;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .portrait {
+        margin-bottom: 26px;
+      }
+
+      .portrait img {
+        max-width: 260px;
+        border-radius: 18px;
+      }
+
+      h1 {
+        margin-bottom: 14px;
+        font-size: 42px;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+        font-size: 13px;
+        letter-spacing: 0.2em;
       }
 
       .lede {
-        margin-bottom: 34px;
+        margin-bottom: 0;
+        font-size: 20px;
+        line-height: 1.78;
       }
 
       p,
       li {
-        font-size: 16px;
-        line-height: 1.8;
+        font-size: 18px;
+        line-height: 1.82;
+      }
+
+      section + section {
+        margin-top: 32px;
+      }
+
+      ul {
+        margin-top: 12px;
+      }
+
+      li + li {
+        margin-top: 4px;
       }
     }
 
